@@ -4,10 +4,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-  
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <!-- Bootstrap CSS -->
     <!-- Latest compiled and minified CSS -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    {% load times %}
 
     <title>Show Book and Its Reviews</title>
 </head>
@@ -76,6 +77,9 @@
                 <ul class="list-group">
                     <li class="list-group-item">
                         Rating: {{ item.rating }}
+                        {% for i in item.rating|times %}
+                            <span class="fa fa-star"></span>
+                        {% endfor %}
                     </li>
                     <li class="list-group-item">
                         <a href="{%url 'reviewers:showuser' item.reviewer.id %}">{{ item.reviewer.alias }}</a> says: {{ item.review }} 
