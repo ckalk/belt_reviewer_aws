@@ -1,0 +1,142 @@
+<html lang="en">
+<head>
+    <!-- Required meta tags -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  
+    <!-- Bootstrap CSS -->
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+
+    <title>Show Book and Its Reviews</title>
+</head>
+
+<body>
+<div class="container">
+
+<!-- navbar here -->
+    <nav class="navbar navbar-expand-md navbar-light bg-light">
+        <div class="navbar-collapse collapse w-100 order-3 dual-collapse2">
+            <ul class="navbar-nav ml-auto">
+                <li class="nav-item">
+                    <a class="nav-link" href="{%url 'books:dashboard' %}">Home</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link disabled">Add Book and Review</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{%url 'logreg:logoff' %}">Logout</a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+    
+    <!-- error message here -->
+    {% if messages %}
+    <div id="errors">
+        <ul class="messages">
+            {% for message in messages %}
+                {% if "books error" in message.tags %}
+                <li  class="text-danger">
+                {{ message }}
+                </li>
+                {% endif %}
+            {% endfor %}
+        </ul>
+    </div>
+    {% endif %}
+    
+    <!-- success message here -->
+    {% if messages %}
+    <div id="successes">
+        <ul class="messages">
+            {% for message in messages %}
+                {% if "success" in message.tags %}
+                <li  class="text-success">
+                {{ message }}
+                </li>
+                {% endif %}
+            {% endfor %}
+        </ul>
+    </div>
+    {% endif %}
+
+    <div class="page-header">
+        <h3>{{book.title}}</h3>
+        <h4>Author: {{book.author}}</h4>
+    </div>
+
+    <div class="row">
+
+        <div class= "col-sm-6">
+            <h3>Reviews:</h3>
+            {% for item in reviews %}
+                <hr>
+                <ul class="list-group">
+                    <li class="list-group-item">
+                        Rating: {{ item.rating }}
+                    </li>
+                    <li class="list-group-item">
+                        <a href="{%url 'reviewers:showuser' item.reviewer.id %}">{{ item.reviewer.alias }}</a> says: {{ item.review }} 
+                    </li>
+                    <li class="list-group-item">Posted on {{ item.created_at }}
+                        {% if item.reviewer.id == request.session.id %}
+                            <a class="ml-5" href="{%url 'books:delreview' item.id %}">Delete this Review</a>
+                        {% endif %}
+                    </li>                   
+                </ul>  
+                
+            {% endfor %}
+        </div>
+
+        <div class= "col-sm-6">
+            <h4> Add a Review:</h4>
+
+
+            <form action="{%url 'books:addreview' book.id %}" method="post">
+
+                    {% csrf_token %}
+        
+                    <div class="row form-group">
+                        <label for="review" class="col-sm-2 lead">Review:</label>
+                        <input type="textarea" class="form-control" rows="5" name="review" placeholder="Enter your review">
+                    </div>
+        
+                    <div class="row form-group">
+                        <label for="rating" class="col-sm-2 lead">Rating:</label>
+                        <div class="col-sm-2">
+                            <select class="form-control " name="rating" id="rating">
+                                <option>1</option>
+                                <option>2</option>
+                                <option>3</option>
+                                <option>4</option>
+                                <option>5</option>
+                            </select>
+                        </div>
+                        <label>stars</label>
+                    </div>
+        
+                    <button type="submit" class="btn btn-primary">Submit review</button>
+        
+                </form>
+        </div>
+
+    </div>
+
+<!-- rule and footer  for every page -->
+    <hr>
+    <footer>
+        <p>&copy; Kalkulations 2018</p>
+    </footer>
+
+</div>
+
+<!-- Optional JavaScript for bootstrap would go here-->
+<!-- jQuery first, then Popper.js, then Bootstrap JS -->
+<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+
+</body>
+</html>

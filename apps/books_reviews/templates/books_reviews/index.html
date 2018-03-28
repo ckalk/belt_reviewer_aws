@@ -1,0 +1,123 @@
+<html lang="en">
+<head>
+    <!-- Required meta tags -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <!-- Bootstrap CSS -->
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    {% load times %}
+    <title>Books Home</title>
+</head>
+
+<body>
+<div class="container">
+
+<!-- navbar here -->
+    <nav class="navbar navbar-expand-md navbar-light bg-light">
+        <div class="navbar-collapse collapse w-100 order-1 order-md-0 dual-collapse2">
+            <a class="nav-brand">Welcome, {{ request.session.alias }}!</a>
+        </div> 
+        <div class="navbar-collapse collapse w-100 order-3 dual-collapse2">
+            <ul class="navbar-nav ml-auto">
+                <li class="nav-item">
+                    <a class="nav-link disabled" >Home</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{%url 'books:new' %}">Add Book and Review</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{%url 'logreg:logoff' %}">Logout</a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- error message here -->
+    {% if messages %}
+    <div id="errors">
+        <ul class="messages">
+            {% for message in messages %}
+                {% if "books error" in message.tags %}
+                <li  class="text-danger">
+                {{ message }}
+                </li>
+                {% endif %}
+            {% endfor %}
+        </ul>
+    </div>
+    {% endif %}
+    
+    <!-- success message here -->
+    {% if messages %}
+    <div id="successes">
+        <ul class="messages">
+            {% for message in messages %}
+                {% if "success" in message.tags %}
+                <li  class="text-success">
+                {{ message }}
+                </li>
+                {% endif %}
+            {% endfor %}
+        </ul>
+    </div>
+    {% endif %}
+
+    <div class="row">
+
+        <div class= "col-sm-6">
+            <h3>Recent Book Reviews:</h3>
+            {% for item in last3_reviews %}
+                <hr>
+                <a href="{%url 'books:showbook' item.book.id %}">{{ item.book.title }}</a> 
+
+                <ul class="list-group mr-5">
+                    <li class="list-group-item">
+                        Rating: {{ item.rating }}
+                        {% for i in item.rating|times %}
+                            <span class="fa fa-star"></span>
+                        {% endfor %}
+                    </li>
+                    <li class="list-group-item">
+                        <a href="{%url 'reviewers:showuser' item.reviewer.id %}">{{ item.reviewer.alias }}</a> says: {{ item.review }} 
+                    </li>
+                    <li class="list-group-item">Posted on {{ item.created_at }}
+                    </li>                   
+                </ul>  
+                
+            {% endfor %}
+        </div>
+
+        <div class= "col-sm-6">
+            <h4> Other Books with Reviews:</h4>
+            <div class="pre-scrollable border border-primary">
+            <ul class="list-group">
+                {% for item in books_w_reviews %}
+                    <li class="list-group-item ml-3">
+                        <a href="{%url 'books:showbook' item.0 %}">{{ item.1 }}</a>
+                    </li>
+                {% endfor %}
+            </ul>
+           </div>
+        </div>
+
+    </div>
+
+<!-- rule and footer  for every page -->
+        <hr>
+        <footer>
+            <p>&copy; Kalkulations 2018</p>
+        </footer>
+
+</div>
+
+<!-- Optional JavaScript for bootstrap would go here-->
+<!-- jQuery first, then Popper.js, then Bootstrap JS -->
+<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+
+</body>
+</html>
